@@ -72,7 +72,7 @@ def main(args, params, expdir):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-c', '--config', type=str, default='egs/aishell/conf/transformer_base.yaml')
+    parser.add_argument('-c', '--config', type=str, default='egs/aishell/conf/transformer_baseline.yaml')
     parser.add_argument('-n', '--ngpu', type=int, default=1)
     parser.add_argument('-g', '--gpus', type=str, default='0')
     parser.add_argument('-se', '--seed', type=int, default=1234)

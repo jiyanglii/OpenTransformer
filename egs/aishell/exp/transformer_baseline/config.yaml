@@ -5,11 +5,11 @@ data:
   dataset_type: online # kaldi, online or espnet
   model_unit: chars
   train:
-    feat: ['egs/aishell/data/train/train_path.txt']
+    feat: ['egs/aishell/data/train/wav.scp']
     text: ['egs/aishell/data/train/text']
     # wav-to-duration: ['egs/aishell/data/train/wav-to-duration']
   test: 
-    feat: ['egs/aishell/data/test/test_path.txt']
+    feat: ['egs/aishell/data/test/wav.scp']
     text: ['egs/aishell/data/test/text']
   # bucket:
   #   bucket_boundaries: [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
@@ -20,7 +20,7 @@ data:
   #   drop_last: False
   num_mel_bins: 40
   normalization: True
-  spec_augment: False
+  spec_augment: True
   speed_perturb: False
   volume_perturb: False
   gaussian_noise: 0.00
@@ -31,7 +31,7 @@ data:
     freq_mask_rate: 0.3
     time_mask_rate: 0.05
 model:
-  type: transformer_lm
+  type: speech2text
   frontend_type: conv
   frontend:
     input_size: 40
@@ -60,7 +60,7 @@ model:
     relative_positional: False
   decoder_type: transformer
   decoder:
-    vocab_size: 242
+    vocab_size: 4234
     d_model: 256
     n_heads: 4
     d_ff: 2048
