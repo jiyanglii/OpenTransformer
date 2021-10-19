@@ -95,6 +95,9 @@ class TransformerLanguageModel(BaseLM):
     def __init__(self, params):
         super(TransformerLanguageModel, self).__init__(params)
 
+        print("*********************  " )
+        print(params)
+
         self.model_type = 'transformer_lm'
         self.normalize_before = False
         self.smoothing = params['smoothing']

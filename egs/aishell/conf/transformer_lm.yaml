@@ -6,12 +6,12 @@ data:
   src_vocab: egs/aishell/data/vocab
   tgt_vocab: egs/aishell/data/vocab
   train:
-    src: ['egs/aishell/data/train/text']
+    src: ['egs/aishell/data/train/train_path.txt']
     tgt: ['egs/aishell/data/train/text']
 model:
   type: transformer_lm
-  vocab_size: 4233
-  num_blocks: 6
+  vocab_size: 242
+  num_blocks: 3
   d_model: 256
   n_heads: 4
   d_ff: 1024
@@ -32,7 +32,7 @@ train:
     warmup_steps: 12000
     factor: 1.0
   clip_grad: 5
-  epochs: 60
+  epochs: 20
   accum_steps: 4
   grad_noise: 0.0
   load_model: False

@@ -18,7 +18,7 @@ class BaseScheduler(object):
 
         # Attach optimizer
         self.optimizer = optimizer
-        self.global_step = 0
+        self.global_step = 0.1
         self.global_epoch = 0
         self.stepwise = stepwise
         self.lr = 0
@@ -132,9 +132,11 @@ class TransformerScheduler(BaseScheduler):
         self.model_size = model_size
         self.warmup_steps = warmup_steps
         self.factor = factor
-        super(TransformerScheduler, self).__init__(optimizer, stepwise=True)  
+        super(TransformerScheduler, self).__init__(optimizer, stepwise=True)
 
     def get_step_lr(self, step):
+        print("**********************************************")
+        print(self.factor, self.model_size, self.warmup_steps, step)
         return self.factor * self.model_size ** (-0.5) * min(step ** (-0.5), step * self.warmup_steps ** (-1.5))
 
 

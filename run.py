@@ -16,6 +16,7 @@ from otrans.train.scheduler import BuildOptimizer, BuildScheduler
 from otrans.train.trainer import Trainer
 from otrans.utils import count_parameters
 from otrans.data.loader import FeatureLoader
+from torch.nn.parameter import Parameter
 
 
 def main(args, params, expdir):
@@ -50,6 +51,55 @@ def main(args, params, expdir):
         chkpt = torch.load(args.init_model)
         model.load_model(chkpt)
         logger.info('[Continue Training] Load saved model %s' % args.init_model)
+
+        # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        # checkpoint = torch.load(args.init_model)
+        # # model.load_model(chkpt)
+        # logger.info('[Continue Training] Load saved model %s' % args.init_model)
+        #
+        # if 'frontend' in checkpoint:
+        #     model.frontend.load_state_dict(checkpoint['frontend'])
+        #     logger.info('[FrontEnd] Load the frontend checkpoint!')
+        #
+        # model.encoder.load_state_dict(checkpoint['encoder'])
+        # logger.info('[Encoder] Load the encoder checkpoint!')
+        #
+        # encoder_state = ['blocks.11.slf_attn.output_proj.weight', 'blocks.11.slf_attn.output_proj.bias',
+        #                  'blocks.11.slf_attn.qvk_proj.weight', 'blocks.11.slf_attn.qvk_proj.bias',
+        #                  'blocks.11.feed_forward.w_1.weight', 'blocks.11.feed_forward.w_1.bias',
+        #                  'blocks.11.feed_forward.w_2.weight', 'blocks.11.feed_forward.w_2.bias',
+        #                  'blocks.11.norm1.weight', 'blocks.11.norm1.bias',
+        #                  'blocks.11.norm2.weight', 'blocks.11.norm2.bias']
+        #
+        # if 'encoder' in checkpoint:
+        #     own_state = model.encoder.state_dict()
+        #     for name, param in checkpoint['encoder'].items():
+        #         if name not in own_state:
+        #             continue
+        #         if name in encoder_state:
+        #             continue
+        #         else:
+        #             param.requires_grad = False
+        #         if isinstance(param, Parameter):
+        #             param = param.data
+        #         own_state[name].copy_(param)
+        #     logger.info('[encoder] Load the encoder checkpoint!')
+        # logger.info('Finished! Loaded pre-trained model from %s')  # % args.load_model)
+        #
+        # if 'decoder' in checkpoint:
+        #     own_state = model.decoder.state_dict()
+        #     for name, param in checkpoint['decoder'].items():
+        #         if name not in own_state:
+        #             continue
+        #         if name in ['output_layer.weight', 'output_layer.bias', 'embedding.weight']:
+        #             continue
+        #         else:
+        #             param.requires_grad = False
+        #         if isinstance(param, Parameter):
+        #             param = param.data
+        #         own_state[name].copy_(param)
+        #     logger.info('[Decoder] Load the decoder checkpoint!')
+        # logger.info('Finished! Loaded pre-trained model from %s')  # % args.load_model)
 
     if args.continue_training and args.init_optim_state:
         ochkpt = torch.load(args.init_optim_state)

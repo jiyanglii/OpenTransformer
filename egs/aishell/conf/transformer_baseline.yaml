@@ -1,16 +1,16 @@
 data:
   name: aishell
-  vocab: egs/aishell/data/vocab
+  vocab: egs/aishell/data/vocab.txt
   batch_size: 16
   dataset_type: online # kaldi, online or espnet
   model_unit: chars
   train:
     feat: ['egs/aishell/data/train/train_path.txt']
-    text: ['egs/aishell/data/train/text']
+    text: ['egs/aishell/data/train/text.txt']
     # wav-to-duration: ['egs/aishell/data/train/wav-to-duration']
   test: 
     feat: ['egs/aishell/data/test/test_path.txt']
-    text: ['egs/aishell/data/test/text']
+    text: ['egs/aishell/data/test/text.txt']
   # bucket:
   #   bucket_boundaries: [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
   #   bucket_batch_size: []
@@ -31,7 +31,7 @@ data:
     freq_mask_rate: 0.3
     time_mask_rate: 0.05
 model:
-  type: transformer_lm
+  type: speech2text
   frontend_type: conv
   frontend:
     input_size: 40
@@ -47,9 +47,9 @@ model:
   encoder_type: transformer
   encoder:
     d_model: 256
-    n_heads: 4
+    n_heads: 2
     d_ff: 2048
-    n_blocks: 12
+    n_blocks: 3
     pos_dropout: 0.0 
     slf_attn_dropout: 0.0
     ffn_dropout: 0.0
@@ -65,7 +65,7 @@ model:
     n_heads: 4
     d_ff: 2048
     memory_dim: 256
-    n_blocks: 6
+    n_blocks: 3
     pos_dropout: 0.0
     slf_attn_dropout: 0.0
     src_attn_dropout: 0.0
@@ -92,7 +92,7 @@ train:
     warmup_steps: 12000
     factor: 1.0
   clip_grad: 5
-  epochs: 80
+  epochs: 20
   accum_steps: 4
   grad_noise: 0.0
   load_model: False

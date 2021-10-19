@@ -149,6 +149,8 @@ class FeatureLoader(object):
             if ngpu >= 1:
                 self.batch_size *= ngpu
 
+        print("******************************")
+        print("Start DataLoaderX!")
         self.loader = DataLoaderX(
             self.dataset, batch_size=self.batch_size,
             shuffle=self.shuffle, sampler=self.sampler,

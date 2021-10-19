@@ -12,6 +12,7 @@ import python_speech_features as psf
 from otrans.data.augment import spec_augment
 from torch.utils.data import Dataset
 from otrans.data import load_vocab, UNK_TOKEN, EOS, BOS, PAD
+import pandas as pd
 
 logger = logging.getLogger(__name__)
 
@@ -99,7 +100,10 @@ class AudioDataset(Dataset):
         utt_id, path = self.file_list[index]
 
         if self.feature_extractor in ['torchaudio', 'ta']:
-            wavform, sample_frequency = ta.load_wav(path)
+            # wavform, sample_frequency = ta.load(path)
+            sample_frequency = 0
+            wavform1 = pd.read_csv(path)
+            wavform = wavform1.values
         else:
             sample_frequency, wavform = siw.read(path)
 
@@ -114,10 +118,11 @@ class AudioDataset(Dataset):
             wavform *= volume_factor
 
         if self.feature_extractor in ['torchaudio', 'ta']:
-            feature = ta.compliance.kaldi.fbank(
-                wavform, num_mel_bins=self.params['num_mel_bins'],
-                sample_frequency=sample_frequency, dither=0.0
-                )
+            feature_np = wavform
+            # feature = ta.compliance.kaldi.fbank(
+            #     wavform, num_mel_bins=self.params['num_mel_bins'],
+            #     sample_frequency=sample_frequency, dither=0.0
+            #     )
         else:
             feature_np = psf.base.logfbank(wavform, samplerate=sample_frequency, nfilt=self.params['num_mel_bins'])
             feature = torch.FloatTensor(feature_np)
@@ -173,4 +178,5 @@ class AudioDataset(Dataset):
 
     @property
     def vocab_size(self):
+        print("**************************  " + str(len(self.unit2idx)))
         return len(self.unit2idx)
