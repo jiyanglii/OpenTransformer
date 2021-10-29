@@ -11,6 +11,7 @@ from otrans.data.espnet import ESPNetDataset
 from otrans.data.kaldi import KaldiDataset
 from otrans.data.generator import DataLoaderX
 from otrans.data import EOS, PAD, BOS
+import numpy as np
 
 
 Dataset = {
@@ -76,17 +77,35 @@ def collate_fn_with_eos_bos(batch):
     padded_feature_mask = []
     padded_target_mask = []
 
+    # print("**************************** max_feature_length")
+    # print(max_feature_length)
+    # print(batch[0])
+
     for _, feat, feat_len, target, target_len in batch:
         padding_feature_len = max_feature_length - feat_len
         padded_features.append(F.pad(feat, pad=(0, 0, 0, padding_feature_len), value=0.0).unsqueeze(0))
         padded_feature_mask.append([1] * feat_len + [0] * padding_feature_len)
 
         padding_target_len = max_target_length - target_len
+        # padded_targets.append([BOS] + target + [EOS] + [PAD] * padding_target_len)
         padded_targets.append([BOS] + target + [EOS] + [PAD] * padding_target_len)
         padded_target_mask.append([1] * (target_len + 2) + [0] * padding_target_len)
 
+        # print("**************************** feat")
+        # print(_)
+        # print(feat_len)
+        # print(target)
+        # print(target_len)
+
+
+    # print("**************************** Padded feature")
+    # print(np.shape(padded_features[0]))
+
     features = torch.cat(padded_features, dim=0)
+
     features_length = torch.IntTensor(features_length)
+    # print("**************************** features_length")
+    # print(features_length[0][0])
     feature_mask = torch.IntTensor(padded_feature_mask) > 0
 
     targets = torch.LongTensor(padded_targets)
@@ -104,7 +123,12 @@ def collate_fn_with_eos_bos(batch):
         'targets_length': targets_length, # include eos
         'mask': targets_mask
     }
-
+    # print("**************************** inputs")
+    # print(np.shape(inputs['inputs']))
+    # print(np.shape(inputs['mask']))
+    # print(np.shape(targets['targets']))
+    # print(np.shape(targets['mask']))
+    # print(inputs['inputs'])
     return utt_ids, inputs, targets
 
 
@@ -118,6 +142,8 @@ class FeatureLoader(object):
 
         self.dataset_type = params['data']['dataset_type']   # text, online, espnet
         datadict = params['data'][name]
+
+        # run audio.AudioDataset
         self.dataset = Dataset[self.dataset_type](params['data'], datadict, is_eval=is_eval)
 
         if ngpu > 1 and mode == 'ddp':
@@ -149,12 +175,10 @@ class FeatureLoader(object):
             if ngpu >= 1:
                 self.batch_size *= ngpu
 
-        print("******************************")
-        print("Start DataLoaderX!")
         self.loader = DataLoaderX(
             self.dataset, batch_size=self.batch_size,
             shuffle=self.shuffle, sampler=self.sampler,
-            num_workers=self.num_workers, pin_memory=True,
+            num_workers=self.num_workers, pin_memory=False,
             batch_sampler=self.bucket_sampler if self.apply_bucket else None ,
             collate_fn=collate_fn_with_eos_bos if self.dataset_type != 'text' else text_collate_fn
         )
@@ -212,7 +236,7 @@ class FeatureLoaderDIY(object):
         self.loader = DataLoaderX(
             self.dataset, batch_size=self.batch_size,
             shuffle=self.shuffle, sampler=self.sampler,
-            num_workers=self.num_workers, pin_memory=True,
+            num_workers=self.num_workers, pin_memory=False,
             batch_sampler=self.bucket_sampler if self.apply_bucket else None ,
             collate_fn=collate_fn_with_eos_bos if self.dataset_type != 'text' else text_collate_fn
         )

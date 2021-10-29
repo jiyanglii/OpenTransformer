@@ -18,7 +18,7 @@ data:
   #   audo_set_batch_size: True
   #   max_frames_one_batch: 20000
   #   drop_last: False
-  num_mel_bins: 40
+  num_mel_bins: 24
   normalization: True
   spec_augment: False
   speed_perturb: False
@@ -34,7 +34,7 @@ model:
   type: speech2text
   frontend_type: conv
   frontend:
-    input_size: 40
+    input_size: 24
     output_size: 256
     in_channel: 1
     mid_channel: 64
@@ -60,7 +60,7 @@ model:
     relative_positional: False
   decoder_type: transformer
   decoder:
-    vocab_size: 242
+    vocab_size: 1430
     d_model: 256
     n_heads: 4
     d_ff: 2048

@@ -150,6 +150,7 @@ class Trainer(object):
             # axu_loss: dict {loss1: value1, loss2: value2}
             # self.model.forward_hook(self.scheduler.global_step, self.scheduler.global_epoch)
             loss, aux_loss = self.model(inputs, targets)
+            print()
 
             loss = torch.mean(loss) / self.accum_steps
             loss.backward()

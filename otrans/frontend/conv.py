@@ -6,6 +6,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from otrans.frontend.base import BaseFrontEnd
+import numpy as np
 
 
 def cal_width_dim_2d(input_dim, kernel_size, stride, padding=1):
@@ -136,10 +137,15 @@ class ConvFrontEnd(BaseFrontEnd):
         :return:
         
         """
+
         
         x = x.unsqueeze(1)
         x, mask = self.conv1(x, mask)
+        print("*************** conv1")
+        print(np.shape(x), np.shape(mask))
         x, mask = self.conv2(x, mask)
+        print("*************** conv2")
+        print(np.shape(x), np.shape(mask))
         
         b, c, t, f = x.size()
         x = x.transpose(1, 2).reshape(b, t, c * f)

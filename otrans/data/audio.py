@@ -79,17 +79,23 @@ class AudioDataset(Dataset):
         for text_file in self.datadict['text']:
             with open(text_file, 'r', encoding='utf-8') as t:
                 for line in t:
+                    # print("***************************")
+                    # print(line)
                     parts = line.strip().split()
                     utt_id = parts[0]
                     label = []
                     for c in parts[1:]:
                         label.append(self.unit2idx[c] if c in self.unit2idx else self.unit2idx[UNK_TOKEN])
                     self.targets_dict[utt_id] = label
-
+        # print(self.datadict)
+        # print("*****************************")
+        # print(self.targets_dict)   # 's01_0.csv': [0, 1, 2, 3, 4]
         self.file_list = []
         for feat_file in self.datadict['feat']:
             with open(feat_file, 'r', encoding='utf-8') as fid:
                 for line in fid:
+                    print("***************************")
+                    print(line)
                     idx, path = line.strip().split()
                     self.file_list.append([idx, path])
 
@@ -103,7 +109,10 @@ class AudioDataset(Dataset):
             # wavform, sample_frequency = ta.load(path)
             sample_frequency = 0
             wavform1 = pd.read_csv(path)
-            wavform = wavform1.values
+            wavform = wavform1.values.T
+            # print("********************* waveform")
+            # print(len(wavform))
+            # print(wavform1.shape)
         else:
             sample_frequency, wavform = siw.read(path)
 
@@ -119,6 +128,9 @@ class AudioDataset(Dataset):
 
         if self.feature_extractor in ['torchaudio', 'ta']:
             feature_np = wavform
+            feature = torch.FloatTensor(feature_np)
+            # print("********************* feature")
+            # print(np.shape(feature))
             # feature = ta.compliance.kaldi.fbank(
             #     wavform, num_mel_bins=self.params['num_mel_bins'],
             #     sample_frequency=sample_frequency, dither=0.0
@@ -178,5 +190,5 @@ class AudioDataset(Dataset):
 
     @property
     def vocab_size(self):
-        print("**************************  " + str(len(self.unit2idx)))
+        print("************************** vocab_size " + str(len(self.unit2idx)))
         return len(self.unit2idx)
