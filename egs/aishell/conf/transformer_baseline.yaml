@@ -57,10 +57,10 @@ model:
     normalize_before: False
     concat_after: False
     activation: glu
-    relative_positional: False
+    relative_positional: True
   decoder_type: transformer
   decoder:
-    vocab_size: 1430
+    vocab_size: 316
     d_model: 256
     n_heads: 4
     d_ff: 2048
@@ -75,7 +75,7 @@ model:
     normalize_before: False
     concat_after: False
     share_embedding: True
-    # relative_positional: False
+#     relative_positional: True
   ctc_weight: 0.0
   smoothing: 0.1
 train:
@@ -91,9 +91,9 @@ train:
     model_size: 256
     warmup_steps: 12000
     factor: 1.0
-  clip_grad: 5
+  clip_grad: 0.1
   epochs: 20
   accum_steps: 4
-  grad_noise: 0.0
+  grad_noise: 1
   load_model: False
   save_name: transformer_baseline

@@ -150,7 +150,6 @@ class Trainer(object):
             # axu_loss: dict {loss1: value1, loss2: value2}
             # self.model.forward_hook(self.scheduler.global_step, self.scheduler.global_epoch)
             loss, aux_loss = self.model(inputs, targets)
-            print()
 
             loss = torch.mean(loss) / self.accum_steps
             loss.backward()
@@ -165,10 +164,15 @@ class Trainer(object):
                 if self.local_rank == 0:
                     self.mean_loss.update(step_loss.avg)
 
+                # print("#######################")
+                # print(self.model.parameters())
                 grad_norm = torch.nn.utils.clip_grad_norm_(self.model.parameters(), self.grad_clip)
-                
+                print("#######################")
+                print(grad_norm)
+
                 if self.grad_noise > 0.0:
                     for p in self.model.parameters():
+
                         if p.requires_grad:
                             noise = torch.normal(0, self.grad_noise, p.grad.shape, device=loss.device)
                             p.grad += noise / self.accum_steps

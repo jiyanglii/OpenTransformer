@@ -94,8 +94,8 @@ class AudioDataset(Dataset):
         for feat_file in self.datadict['feat']:
             with open(feat_file, 'r', encoding='utf-8') as fid:
                 for line in fid:
-                    print("***************************")
-                    print(line)
+                    # print("***************************")
+                    # print(line)
                     idx, path = line.strip().split()
                     self.file_list.append([idx, path])
 
