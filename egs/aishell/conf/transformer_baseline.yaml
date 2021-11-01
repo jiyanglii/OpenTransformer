@@ -19,15 +19,15 @@ data:
   #   max_frames_one_batch: 20000
   #   drop_last: False
   num_mel_bins: 24
-  normalization: True
+  normalization: False
   spec_augment: False
   speed_perturb: False
   volume_perturb: False
   gaussian_noise: 0.00
   num_workers: 4
   spec_augment_config:
-    freq_mask_num: 2
-    time_mask_num: 5
+    freq_mask_num: 1
+    time_mask_num: 2
     freq_mask_rate: 0.3
     time_mask_rate: 0.05
 model:
@@ -35,18 +35,18 @@ model:
   frontend_type: conv
   frontend:
     input_size: 24
-    output_size: 256
+    output_size: 128
     in_channel: 1
     mid_channel: 64
     out_channel: 128
-    kernel_size: [[3,3],[3,3]]
+    kernel_size: [[1,1],[1,1]]
     stride: [2, 2]
     dropout: 0.0
     act_func_type: relu
     front_end_layer_norm: False
   encoder_type: transformer
   encoder:
-    d_model: 256
+    d_model: 128
     n_heads: 2
     d_ff: 2048
     n_blocks: 3
@@ -60,11 +60,11 @@ model:
     relative_positional: True
   decoder_type: transformer
   decoder:
-    vocab_size: 316
-    d_model: 256
+    vocab_size: 317
+    d_model: 128
     n_heads: 4
     d_ff: 2048
-    memory_dim: 256
+    memory_dim: 128
     n_blocks: 3
     pos_dropout: 0.0
     slf_attn_dropout: 0.0
@@ -88,11 +88,11 @@ train:
     amsgrad: False
   scheduler_type: transformer
   scheduler:
-    model_size: 256
+    model_size: 128
     warmup_steps: 12000
     factor: 1.0
-  clip_grad: 0.1
-  epochs: 20
+  clip_grad: 5
+  epochs: 40
   accum_steps: 4
   grad_noise: 1
   load_model: False

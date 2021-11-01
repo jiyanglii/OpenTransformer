@@ -2,6 +2,8 @@
 import threading
 import queue as Queue
 from torch.utils.data import DataLoader
+import torch.multiprocessing
+torch.multiprocessing.set_sharing_strategy('file_system')
 
 
 class BackgroundGenerator(threading.Thread):

@@ -135,8 +135,8 @@ class TransformerScheduler(BaseScheduler):
         super(TransformerScheduler, self).__init__(optimizer, stepwise=True)
 
     def get_step_lr(self, step):
-        print("**********************************************")
-        print(self.factor, self.model_size, self.warmup_steps, step)
+        # print("**********************************************")
+        # print(self.factor, self.model_size, self.warmup_steps, step)
         return self.factor * self.model_size ** (-0.5) * min(step ** (-0.5), step * self.warmup_steps ** (-1.5))
 
 

@@ -138,6 +138,7 @@ class Trainer(object):
         step_loss = AverageMeter()
         auxiliary_loss = AuxiliaryLossAverageMeter()
         span = 0
+
         for step, (_, inputs, targets) in enumerate(train_loader):
 
             if self.ngpu > 0:
@@ -166,9 +167,12 @@ class Trainer(object):
 
                 # print("#######################")
                 # print(self.model.parameters())
-                grad_norm = torch.nn.utils.clip_grad_norm_(self.model.parameters(), self.grad_clip)
+                grad_norm = torch.nn.utils.clip_grad_norm_(self.model.parameters(), self.grad_clip, error_if_nonfinite=False)
                 print("#######################")
                 print(grad_norm)
+
+                debug_input_size = []
+                debug_input_list = []
 
                 if self.grad_noise > 0.0:
                     for p in self.model.parameters():
